@@ -8,6 +8,7 @@ const InitialState = Immutable({
     fetching_cities: false,
     city: 1,
     cities: [],
+    selected_cities: [],
 });
 
 export default function reducer(state = InitialState, action = {}) {
@@ -23,6 +24,15 @@ export default function reducer(state = InitialState, action = {}) {
             cities: action.cities,
             fetching_cities: true,
         });
+        case types.SELECTED_CITY_ADDED:
+        return state.merge({
+            selected_cities: [...state.selected_cities, action.city],
+        });
+        case types.SELECTED_CITY_REMOVED:
+        let cities = state.selected_cities.filter(city => city !== action.city);
+        return state.merge({
+            selected_cities: cities,
+        });
         default:
             return state;
     }
@@ -30,6 +40,10 @@ export default function reducer(state = InitialState, action = {}) {
 
 export function getWeather(state = InitialState) {
     return state.city_weather;
+}
+
+export function getSelectedCities(state = InitialState) {
+    return state.selected_cities;
 }
 
 

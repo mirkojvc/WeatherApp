@@ -15,9 +15,13 @@ class CitySelector extends Component {
     }
 
     onChange(event) {
-        let city_id = parseInt(event.currentTarget.value,  10);
+        let city = event.currentTarget;
+        if(city.checked) {
+            this.props.dispatch(actions.addCityToState(city.value))
+        } else {
+            this.props.dispatch(actions.removeCityFromState(city.value))
+        }
 
-        this.props.dispatch(actions.fetchCityWeather(city_id))
     }
 
     render() {
@@ -30,7 +34,7 @@ class CitySelector extends Component {
                 return(
                     <div>
                         <label>{city}</label>
-                        <input type = "checkbox" value = "{city}"/>
+                        <input type = "checkbox" key={city} value ={city} onChange = {this.onChange}/>
                     </div>
                 );
             }))
@@ -42,10 +46,11 @@ class CitySelector extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const cities = reducer.getCities(state);
-    console.log(cities);
+    const selected_cities = reducer.getSelectedCities(state);
     return {
         cities: state.cities,
-        fetching_cities: state.fetching_cities
+        fetching_cities: state.fetching_cities,
+        selected_cities: state.selected_cities,
     };
 }
 
